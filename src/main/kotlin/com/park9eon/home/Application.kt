@@ -7,5 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 open class Application
 
 fun main(vararg args: String) {
+    System.setProperty("spring.devtools.restart.enabled", "false")
     run(Application::class.java, *args)
 }

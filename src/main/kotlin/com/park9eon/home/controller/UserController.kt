@@ -1,5 +1,6 @@
 package com.park9eon.home.controller
 
+import org.springframework.security.oauth2.provider.OAuth2Authentication
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
@@ -14,6 +15,7 @@ import java.security.Principal
 class UserController {
 
     @RequestMapping("/user", "/")
-    fun show(principal: Principal?) = principal
+    fun show(principal: Principal?) = principal.let {(principal as? OAuth2Authentication)?.userAuthentication?.details
+    }
 
 }
