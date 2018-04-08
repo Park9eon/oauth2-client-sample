@@ -29,3 +29,4 @@ nbdist/
 .DS_Store
 *.yml
 *.p12
+/src/main/resources/client_secrets.json

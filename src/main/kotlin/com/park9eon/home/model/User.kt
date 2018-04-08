@@ -1,6 +1,8 @@
 package com.park9eon.home.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
+import javax.validation.constraints.NotNull
 
 
 /**
@@ -9,12 +11,19 @@ import javax.persistence.*
  */
 @Entity
 open class User {
+    @get:JsonIgnore
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = -1L
+    open var id: Long? = null
     @get:Column(unique = true)
-    lateinit var username: String
-    @get:JoinColumn
-    @get:OneToMany(cascade = [CascadeType.ALL])
-    var roles: Set<UserRole>? = null
+    open lateinit var username: String
+    @get:JsonIgnore
+    @get:NotNull
+    open var enabled = true
+    @get:JsonIgnore
+    @get:OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "user")
+    open var roles: Set<UserRole>? = null
+    @get:OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "user")
+    @get:JsonIgnore
+    open var additions: Set<UserAddition>? = null
 }

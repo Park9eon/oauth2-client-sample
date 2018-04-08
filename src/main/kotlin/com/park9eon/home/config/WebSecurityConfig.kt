@@ -20,8 +20,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.filter.CompositeFilter
 import javax.servlet.Filter
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.core.userdetails.UserDetailsService
 
 /**
  * Initial version by: park9eon
@@ -34,12 +32,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     lateinit var oauth2ClientContext: OAuth2ClientContext
     @Autowired
-    lateinit var userDetailsService: JpaUserDetailsService
-
-    @Throws(Exception::class)
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService<UserDetailsService>(userDetailsService)
-    }
+    lateinit var userService: UserService
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
@@ -68,7 +61,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 facebook()
                         .let { facebook ->
                             val template = OAuth2RestTemplate(facebook.client, oauth2ClientContext)
-                            val facebookUserInfoTokenService = FacebookUserInfoTokenService(facebook, template)
+                            val facebookUserInfoTokenService = FacebookUserInfoService(userService, facebook, template)
                             this.setRestTemplate(template)
                             this.setTokenServices(facebookUserInfoTokenService)
                         }
@@ -83,7 +76,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 github()
                         .let { github ->
                             val template = OAuth2RestTemplate(github.client, oauth2ClientContext)
-                            val githubUserInfoTokenService = GithubUserInfoTokenService(github, template)
+                            val githubUserInfoTokenService = GithubUserInfoService(userService, github, template)
                             this.setRestTemplate(template)
                             this.setTokenServices(githubUserInfoTokenService)
                         }
@@ -98,7 +91,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 google()
                         .let { google ->
                             val template = OAuth2RestTemplate(google.client, oauth2ClientContext)
-                            val googleUserInfoTokenService = GoogleUserInfoTokenService(google, template)
+                            val googleUserInfoTokenService = GoogleUserInfoService(userService, google, template)
                             this.setRestTemplate(template)
                             this.setTokenServices(googleUserInfoTokenService)
                         }
@@ -113,7 +106,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 kakao()
                         .let { kakao ->
                             val template = OAuth2RestTemplate(kakao.client, oauth2ClientContext)
-                            val kakaoUserInfoTokenService = KakaoUserInfoTokenService(kakao, template)
+                            val kakaoUserInfoTokenService = KakaoUserInfoService(userService, kakao, template)
                             this.setRestTemplate(template)
                             this.setTokenServices(kakaoUserInfoTokenService)
                         }
@@ -128,7 +121,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 naver()
                         .let { naver ->
                             val template = OAuth2RestTemplate(naver.client, oauth2ClientContext)
-                            val naverUserInfoTokenService = NaverUserInfoTokenService(naver, template)
+                            val naverUserInfoTokenService = NaverUserInfoService(userService, naver, template)
                             this.setRestTemplate(template)
                             this.setTokenServices(naverUserInfoTokenService)
                         }

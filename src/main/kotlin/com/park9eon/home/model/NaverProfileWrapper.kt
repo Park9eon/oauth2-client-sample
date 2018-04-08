@@ -1,4 +1,4 @@
-package com.park9eon.home.model.social
+package com.park9eon.home.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -9,9 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * Initial version created on: 05/04/2018
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class KakaoUserInfo {
-    var id: Long? = null
-    @JsonProperty("kaccount_email")
-    var kaccountEmail: String? = null
-    var properties: KakaoUserProperties? = null
+class NaverProfileWrapper {
+    @JsonProperty("response")
+    var profile: NaverProfile? = null
 }

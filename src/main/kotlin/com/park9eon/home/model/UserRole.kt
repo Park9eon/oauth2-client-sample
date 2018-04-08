@@ -18,11 +18,18 @@ open class UserRole {
 
     @get:Id
     @get:GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = -1L
+    open var id: Long? = null
     @get:NotNull
-    @get:JoinColumn
+    @get:JoinColumn(name = "user_id")
     @get:ManyToOne(fetch = FetchType.LAZY)
-    lateinit var user: User
+    open lateinit var user: User
     @get:NotNull
-    lateinit var role: String
+    open lateinit var authority: String
+
+    constructor()
+
+    constructor(user: User, authority: String) {
+        this.user = user
+        this.authority = authority
+    }
 }
