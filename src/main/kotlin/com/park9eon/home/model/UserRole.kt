@@ -10,20 +10,19 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 open class UserRole {
-
     companion object {
         const val ROLE_USER = "ROLE_USER"
         const val ROLE_ADMIN = "ROLE_ADMIN"
     }
 
-    @get:Id
-    @get:GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Long? = null
-    @get:NotNull
-    @get:JoinColumn(name = "user_id")
-    @get:ManyToOne(fetch = FetchType.LAZY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    open var id: Long = 0
+    @NotNull
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var user: User
-    @get:NotNull
+    @NotNull
     open lateinit var authority: String
 
     constructor()

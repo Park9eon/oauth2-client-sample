@@ -2,8 +2,8 @@ package com.park9eon.home.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.park9eon.home.model.ClientResources
-import com.park9eon.home.model.UserDetails
 import com.park9eon.home.model.Profile
+import com.park9eon.home.model.UserDetails
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.oauth2.client.OAuth2RestTemplate
@@ -33,7 +33,7 @@ abstract class ProfileUserInfoService(private val userService: UserService, clie
         return objectMapper.readValue(objectMapper.writeValueAsString(details), clazz.java)
     }
 
-    override fun getPrincipal(map: MutableMap<String, Any>) = this.convertProfile(map).email ?: UNKNOWN_FIELD
+    override fun getPrincipal(map: MutableMap<String, Any>) = this.convertProfile(map).email
 
     override fun loadAuthentication(accessToken: String?): OAuth2Authentication {
         return super.loadAuthentication(accessToken).let {
@@ -46,7 +46,7 @@ abstract class ProfileUserInfoService(private val userService: UserService, clie
                 val userAuthentication = UserDetails(user, details)
                 OAuth2Authentication(it.oAuth2Request, userAuthentication)
             } catch (e: Exception) {
-                throw object : AuthenticationException("User does not find or create") {}
+                throw object : AuthenticationException("User does not find or create", e) {}
             }
         }
     }

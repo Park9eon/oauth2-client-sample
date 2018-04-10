@@ -6,11 +6,13 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
     }
 }
 
 apply plugin: "kotlin"
 apply plugin: "kotlin-spring"
+apply plugin: "kotlin-jpa"
 apply plugin: "idea"
 apply plugin: "org.springframework.boot"
 apply plugin: "io.spring.dependency-management"
@@ -48,6 +50,8 @@ dependencies {
     // 데이터베이스설정
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("mysql:mysql-connector-java")
+    compile("org.springframework.session:spring-session-data-redis")
+    compile("io.lettuce:lettuce-core:5.0.2.RELEASE")
     // 보안설정
     def cloudSecurityVersion = "2.0.0.M3"
     compile("org.springframework.boot:spring-boot-starter-security")

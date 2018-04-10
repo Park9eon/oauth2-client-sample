@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 @JsonIgnoreProperties(ignoreUnknown = true)
 class KakaoProfile : Profile() {
     @JsonProperty("kaccount_email")
-    override var email: String? = null
+    override lateinit var email: String
     var properties: KakaoProfileProperties? = null
     override var name: String?
         get() = this.properties?.nickname

@@ -11,22 +11,22 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 open class UserAddition {
-    @get:Id
-    @get:GeneratedValue(strategy = GenerationType.IDENTITY)
-    @get:JsonIgnore
-    open var id: Long? = null
-    @get:NotNull
-    @get:JoinColumn(name = "user_id")
-    @get:ManyToOne(fetch = FetchType.LAZY)
-    @get:JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
+    open var id: Long = 0
+    @NotNull
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     open lateinit var user: User
-    @get:NotNull
-    @get:JsonIgnore
+    @NotNull
+    @JsonIgnore
     open lateinit var source: String
-    @get:NotNull
-    open lateinit var name: String
+    @NotNull
+    open var name: String? = null
     open var imageUrl: String? = null
-    @get:Column(columnDefinition = "TEXT")
-    @get:JsonIgnore
+    @Column(columnDefinition = "TEXT")
+    @JsonIgnore
     open var details: String? = null
 }

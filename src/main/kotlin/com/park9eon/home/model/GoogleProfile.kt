@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 @JsonIgnoreProperties(ignoreUnknown = true)
 class GoogleProfile : Profile() {
     @JsonProperty("sub")
-    override var id: Any? = null
+    override lateinit var id: Any
     @JsonProperty("picture")
     override var imageUrl: String? = null
 }

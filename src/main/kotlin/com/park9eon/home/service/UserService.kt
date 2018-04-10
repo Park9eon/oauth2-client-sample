@@ -24,30 +24,25 @@ open class UserService {
     @Autowired
     lateinit var userAdditionRepository: UserAdditionRepository
 
+    @Transactional
     open fun findOrCreateByProfile(profile: Profile): User {
-        return profile.email.let { email ->
-            if (email == null) {
-                throw NullPointerException("Email is not null!")
-            } else {
-                val user = userRepository.findByUsername(email) ?: User()
+        val user = userRepository.findByUsername(profile.email) ?: User()
+                .apply {
+                    username = profile.email
+                    enabled = true
+                    roles = mutableSetOf(UserRole(this, UserRole.ROLE_USER))
+                }
+        userAdditionRepository.save(
+                (userAdditionRepository.findOneByUserAndSource(user, profile.source) ?: UserAddition()
                         .apply {
-                            username = email
-                            enabled = true
-                            roles = setOf(UserRole(this, UserRole.ROLE_USER))
-                        }
-                userAdditionRepository.save(
-                        (userAdditionRepository.findOneByUserAndSource(user, profile.source) ?: UserAddition()
-                                .apply {
-                                    this.user = user
-                                    this.source = profile.source
-                                })
-                                .apply {
-                                    this.imageUrl = profile.imageUrl
-                                    this.name = profile.name ?: email
-                                    this.details = profile.details
-                                })
-                userRepository.save(user)
-            }
-        }
+                            this.user = user
+                            this.source = profile.source
+                        })
+                        .apply {
+                            this.imageUrl = profile.imageUrl
+                            this.name = profile.name ?: profile.email
+                            this.details = profile.details
+                        })
+        return userRepository.save(user)
     }
 }
