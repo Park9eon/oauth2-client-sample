@@ -31,6 +31,7 @@ open class UserService {
                     username = profile.email
                     enabled = true
                     roles = mutableSetOf(UserRole(this, UserRole.ROLE_USER))
+                    userRepository.save(this)
                 }
         userAdditionRepository.save(
                 (userAdditionRepository.findOneByUserAndSource(user, profile.source) ?: UserAddition()
@@ -43,6 +44,7 @@ open class UserService {
                             this.name = profile.name ?: profile.email
                             this.details = profile.details
                         })
-        return userRepository.save(user)
+        // addition과 roles은 user에 적용되지 않지만 lazy - controller에서 재 로딩 필요!
+        return user
     }
 }

@@ -1,9 +1,14 @@
 package com.park9eon.home.config
 
-import com.park9eon.home.model.ClientResources
-import com.park9eon.home.service.*
+import com.park9eon.home.converter.DefaultTokenProfileConverter
+import com.park9eon.home.converter.NaverResultTokenProfileConverter
+import com.park9eon.home.converter.TokenProfileConverter
+import com.park9eon.home.filter.OAuth2ProfileAuthenticationProcessingFilter
+import com.park9eon.home.model.*
+import com.park9eon.home.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
@@ -14,16 +19,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.oauth2.client.OAuth2ClientContext
 import org.springframework.security.oauth2.client.OAuth2RestTemplate
-import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter
+import org.springframework.security.oauth2.provider.token.TokenStore
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import org.springframework.session.data.redis.RedisOperationsSessionRepository
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession
 import org.springframework.web.filter.CompositeFilter
 import javax.servlet.Filter
+import kotlin.reflect.KClass
 
 /**
  * Initial version by: park9eon
@@ -62,76 +68,36 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @ConfigurationProperties("facebook")
     open fun facebook() = ClientResources()
 
-    fun facebookOAuth2ClientProcessingFilter() = OAuth2ClientAuthenticationProcessingFilter("/auth/facebook")
-            .apply {
-                facebook()
-                        .let { facebook ->
-                            val template = OAuth2RestTemplate(facebook.client, oauth2ClientContext)
-                            val facebookUserInfoTokenService = FacebookUserInfoService(userService, facebook, template)
-                            this.setRestTemplate(template)
-                            this.setTokenServices(facebookUserInfoTokenService)
-                        }
-            }
+    fun facebookOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
+            facebook(), FacebookProfile::class, "/auth/facebook")
 
     @Bean
     @ConfigurationProperties("github")
     open fun github() = ClientResources()
 
-    fun githubOAuth2ClientProcessingFilter() = OAuth2ClientAuthenticationProcessingFilter("/auth/github")
-            .apply {
-                github()
-                        .let { github ->
-                            val template = OAuth2RestTemplate(github.client, oauth2ClientContext)
-                            val githubUserInfoTokenService = GithubUserInfoService(userService, github, template)
-                            this.setRestTemplate(template)
-                            this.setTokenServices(githubUserInfoTokenService)
-                        }
-            }
+    fun githubOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
+            github(), GithubProfile::class, "/auth/github")
 
     @Bean
     @ConfigurationProperties("google")
     open fun google() = ClientResources()
 
-    fun googleOAuth2ClientProcessingFilter() = OAuth2ClientAuthenticationProcessingFilter("/auth/google")
-            .apply {
-                google()
-                        .let { google ->
-                            val template = OAuth2RestTemplate(google.client, oauth2ClientContext)
-                            val googleUserInfoTokenService = GoogleUserInfoService(userService, google, template)
-                            this.setRestTemplate(template)
-                            this.setTokenServices(googleUserInfoTokenService)
-                        }
-            }
+    fun googleOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
+            google(), GoogleProfile::class, "/auth/google")
 
     @Bean
     @ConfigurationProperties("kakao")
     open fun kakao() = ClientResources()
 
-    fun kakaoOAuth2ClientProcessingFilter() = OAuth2ClientAuthenticationProcessingFilter("/auth/kakao")
-            .apply {
-                kakao()
-                        .let { kakao ->
-                            val template = OAuth2RestTemplate(kakao.client, oauth2ClientContext)
-                            val kakaoUserInfoTokenService = KakaoUserInfoService(userService, kakao, template)
-                            this.setRestTemplate(template)
-                            this.setTokenServices(kakaoUserInfoTokenService)
-                        }
-            }
+    fun kakaoOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
+            kakao(), KakaoProfile::class, "/auth/kakao")
 
     @Bean
     @ConfigurationProperties("naver")
     open fun naver() = ClientResources()
 
-    fun naverOAuth2ClientProcessingFilter() = OAuth2ClientAuthenticationProcessingFilter("/auth/naver")
-            .apply {
-                naver()
-                        .let { naver ->
-                            val template = OAuth2RestTemplate(naver.client, oauth2ClientContext)
-                            val naverUserInfoTokenService = NaverUserInfoService(userService, naver, template)
-                            this.setRestTemplate(template)
-                            this.setTokenServices(naverUserInfoTokenService)
-                        }
-            }
+    fun naverOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
+            naver(), NaverResultTokenProfileConverter(), "/auth/naver")
 
     private fun ssoFilter(): Filter = CompositeFilter()
             .apply {
@@ -143,6 +109,30 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                         naverOAuth2ClientProcessingFilter()
                 ))
             }
+
+    private fun oauth2ProfileProcessingFilter(
+            clientResources: ClientResources,
+            profileConverter: TokenProfileConverter<*>,
+            processingUrl: String
+    ) = OAuth2ProfileAuthenticationProcessingFilter(userService, profileConverter, processingUrl)
+            .apply {
+                val template = OAuth2RestTemplate(clientResources.client, oauth2ClientContext)
+                this.setRestTemplate(template)
+                val userInfoTokenServices = UserInfoTokenServices(clientResources.resource.userInfoUri, clientResources.client.clientId)
+                userInfoTokenServices.setRestTemplate(template)
+                this.setTokenServices(userInfoTokenServices)
+            }
+
+    private fun <T : Profile> oauth2ProfileProcessingFilter(
+            clientResources: ClientResources,
+            profileClazz: KClass<T>,
+            processingUrl: String
+    ) = this.oauth2ProfileProcessingFilter(clientResources, DefaultTokenProfileConverter(profileClazz), processingUrl)
+
+    @Bean
+    open fun tokenStore(): TokenStore {
+        return RedisTokenStore(connectionFactory())
+    }
 
     @Bean
     open fun connectionFactory(): LettuceConnectionFactory {
