@@ -6,9 +6,9 @@ package com.park9eon.home.model
  */
 open class Profile {
     open lateinit var id: Any
-    open lateinit var email: String
     open lateinit var details: String
-    open lateinit var source: String
+    open lateinit var serviceName: String
+    open var email: String? = null
     open var name: String? = null
     open var imageUrl: String? = null
 }

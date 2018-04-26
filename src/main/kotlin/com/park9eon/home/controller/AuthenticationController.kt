@@ -13,15 +13,15 @@ import java.security.Principal
  */
 @Controller
 @RequestMapping
-open class AuthenticationController {
+class AuthenticationController {
 
     @GetMapping("/auth")
-    open fun login(model: Model): String {
+    fun login(model: Model): String {
         return "auth"
     }
 
     @RequestMapping("/auth/callback")
-    open fun callback(principal: Principal): Principal {
+    fun callback(principal: Principal): Principal {
         return principal
     }
 

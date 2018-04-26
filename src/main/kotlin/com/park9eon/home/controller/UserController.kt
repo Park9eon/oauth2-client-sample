@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/user")
-open class UserController {
+class UserController {
 
     @Autowired
     lateinit var userRepository: UserRepository
 
     @RequestMapping(method = [RequestMethod.GET])
-    open fun index() = userRepository.findAll()
+    fun index() = userRepository.findAll()
 
     @RequestMapping("/me", method = [RequestMethod.GET])
-    open fun me(@AuthenticationPrincipal user: Authentication?) = user
+    fun me(@AuthenticationPrincipal user: Authentication?) = user
 
     @RequestMapping("/{username}", method = [RequestMethod.GET])
-    open fun show(@PathVariable username: String) = userRepository.findByUsername(username)
+    fun show(@PathVariable username: String) = userRepository.findByUsername(username)
 }

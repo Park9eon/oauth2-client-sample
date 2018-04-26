@@ -6,7 +6,6 @@ import com.park9eon.home.model.UserAddition
 import com.park9eon.home.model.UserRole
 import com.park9eon.home.repository.UserAdditionRepository
 import com.park9eon.home.repository.UserRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -17,34 +16,39 @@ import javax.transaction.Transactional
  */
 @Service("userService")
 @Transactional
-open class UserService {
+open class UserService(
+        val userRepository: UserRepository,
+        val userAdditionRepository: UserAdditionRepository
+) {
 
-    @Autowired
-    lateinit var userRepository: UserRepository
-    @Autowired
-    lateinit var userAdditionRepository: UserAdditionRepository
+    companion object {
+        const val UNKNOWN_NAME = "아무개"
+    }
 
     @Transactional
     open fun findOrCreateByProfile(profile: Profile): User {
-        val user = userRepository.findByUsername(profile.email) ?: User()
-                .apply {
-                    username = profile.email
-                    enabled = true
-                    roles = mutableSetOf(UserRole(this, UserRole.ROLE_USER))
-                    userRepository.save(this)
-                }
-        userAdditionRepository.save(
-                (userAdditionRepository.findOneByUserAndSource(user, profile.source) ?: UserAddition()
-                        .apply {
-                            this.user = user
-                            this.source = profile.source
-                        })
-                        .apply {
-                            this.imageUrl = profile.imageUrl
-                            this.name = profile.name ?: profile.email
-                            this.details = profile.details
-                        })
-        // addition과 roles은 user에 적용되지 않지만 lazy - controller에서 재 로딩 필요!
-        return user
+        val additionId = "${profile.serviceName}:${profile.id}"
+        val userAddition = if (userAdditionRepository.existsById(additionId)) {
+            userAdditionRepository.getOne(additionId)
+        } else {
+            UserAddition()
+                    .apply {
+                        this.id = additionId
+                        this.serviceName = profile.serviceName
+                        this.user = userRepository.findByUsername(profile.email ?: additionId) ?: User()
+                                .apply {
+                                    username = profile.email ?: additionId
+                                    enabled = true
+                                    roles = mutableSetOf(UserRole(this, UserRole.ROLE_USER))
+                                    userRepository.save(this)
+                                }
+                    }
+        }
+        return userAddition.run {
+            this.imageUrl = profile.imageUrl
+            this.name = profile.name ?: UNKNOWN_NAME
+            this.details = profile.details
+            userAdditionRepository.save(this).user
+        }
     }
 }

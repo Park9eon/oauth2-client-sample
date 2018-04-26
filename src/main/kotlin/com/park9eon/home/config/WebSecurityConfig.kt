@@ -66,38 +66,38 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Bean
     @ConfigurationProperties("facebook")
-    open fun facebook() = ClientResources()
+    open fun facebook() = ProfileAuthorizationClientResources()
 
     fun facebookOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
-            facebook(), FacebookProfile::class, "/auth/facebook")
+            facebook(), FacebookProfile::class)
 
     @Bean
     @ConfigurationProperties("github")
-    open fun github() = ClientResources()
+    open fun github() = ProfileAuthorizationClientResources()
 
     fun githubOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
-            github(), GithubProfile::class, "/auth/github")
+            github(), GithubProfile::class)
 
     @Bean
     @ConfigurationProperties("google")
-    open fun google() = ClientResources()
+    open fun google() = ProfileAuthorizationClientResources()
 
     fun googleOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
-            google(), GoogleProfile::class, "/auth/google")
+            google(), GoogleProfile::class)
 
     @Bean
     @ConfigurationProperties("kakao")
-    open fun kakao() = ClientResources()
+    open fun kakao() = ProfileAuthorizationClientResources()
 
     fun kakaoOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
-            kakao(), KakaoProfile::class, "/auth/kakao")
+            kakao(), KakaoProfile::class)
 
     @Bean
     @ConfigurationProperties("naver")
-    open fun naver() = ClientResources()
+    open fun naver() = ProfileAuthorizationClientResources()
 
     fun naverOAuth2ClientProcessingFilter() = oauth2ProfileProcessingFilter(
-            naver(), NaverResultTokenProfileConverter(), "/auth/naver")
+            naver(), NaverResultTokenProfileConverter())
 
     private fun ssoFilter(): Filter = CompositeFilter()
             .apply {
@@ -111,10 +111,9 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             }
 
     private fun oauth2ProfileProcessingFilter(
-            clientResources: ClientResources,
-            profileConverter: TokenProfileConverter<*>,
-            processingUrl: String
-    ) = OAuth2ProfileAuthenticationProcessingFilter(userService, profileConverter, processingUrl)
+            clientResources: ProfileAuthorizationClientResources,
+            profileConverter: TokenProfileConverter<*>
+    ) = OAuth2ProfileAuthenticationProcessingFilter(userService, clientResources, profileConverter)
             .apply {
                 val template = OAuth2RestTemplate(clientResources.client, oauth2ClientContext)
                 this.setRestTemplate(template)
@@ -124,11 +123,10 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             }
 
     private fun <T : Profile> oauth2ProfileProcessingFilter(
-            clientResources: ClientResources,
-            profileClazz: KClass<T>,
-            processingUrl: String
-    ) = this.oauth2ProfileProcessingFilter(clientResources, DefaultTokenProfileConverter(profileClazz), processingUrl)
+            ProfileAuthorizationClientResources: ProfileAuthorizationClientResources,
+            profileClazz: KClass<T>) = this.oauth2ProfileProcessingFilter(ProfileAuthorizationClientResources, DefaultTokenProfileConverter(profileClazz))
 
+    // Redis 설정
     @Bean
     open fun tokenStore(): TokenStore {
         return RedisTokenStore(connectionFactory())
