@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.model.user
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
@@ -21,7 +21,7 @@ open class User {
     @JsonIgnore
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "user")
     open var roles: MutableSet<UserRole>? = null
-    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
+    @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "user")
     open var additions: MutableSet<UserAddition>? = null
 }

@@ -2,9 +2,9 @@ package com.park9eon.home.filter
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.park9eon.home.converter.TokenProfileConverter
-import com.park9eon.home.model.Profile
-import com.park9eon.home.model.ProfileAuthorizationClientResources
-import com.park9eon.home.model.UserDetails
+import com.park9eon.home.model.auth.Profile
+import com.park9eon.home.model.auth.ProfileAuthorizationClientResources
+import com.park9eon.home.model.user.UserDetails
 import com.park9eon.home.service.UserService
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
@@ -25,6 +25,8 @@ open class OAuth2ProfileAuthenticationProcessingFilter(
     open var objectMapper = jacksonObjectMapper()
 
     override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication? {
+        // access토큰이 있을경우 무조건 삭제해줌
+        this.restTemplate.oAuth2ClientContext?.accessToken = null
         return (super.attemptAuthentication(request, response) as? OAuth2Authentication)
                 ?.userAuthentication?.let {
             val profile: Profile = this.tokenProfileConverter.convert(it.details)

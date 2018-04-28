@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.model.user
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.core.Authentication
@@ -11,12 +11,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
  */
 class UserDetails(
         var id: Long? = null,
-        private var username: String? = null,
+        private var name: String? = null,
         private var authenticated: Boolean = false,
         private var authorities: Collection<GrantedAuthority>? = null
 ) : Authentication {
 
-    constructor(user: User) : this(user.id, user.username, user.enabled, user.roles?.map { SimpleGrantedAuthority(it.authority) })
+    constructor(user: User) : this(user.id, user.username, user.enabled, user.roles?.map { SimpleGrantedAuthority(it.role.name) })
 
     @JsonIgnore
     override fun getAuthorities() = this.authorities
@@ -30,17 +30,15 @@ class UserDetails(
     }
 
     @JsonIgnore
-    override fun getName() = this.username
-
-    fun getUsername() = this.username
+    override fun getName() = this.name
 
     @JsonIgnore
-    override fun getCredentials() = "N/A"
+    override fun getCredentials() = null
 
     @JsonIgnore
     override fun getPrincipal() = this
 
     @JsonIgnore
-    override fun getDetails() = ""
+    override fun getDetails() = null
 
 }

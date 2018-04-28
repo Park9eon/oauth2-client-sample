@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.model.user
 
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -10,11 +10,6 @@ import javax.validation.constraints.NotNull
  */
 @Entity
 open class UserRole {
-    companion object {
-        const val ROLE_USER = "ROLE_USER"
-        const val ROLE_ADMIN = "ROLE_ADMIN"
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long = 0
@@ -23,12 +18,6 @@ open class UserRole {
     @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var user: User
     @NotNull
-    open lateinit var authority: String
-
-    constructor()
-
-    constructor(user: User, authority: String) {
-        this.user = user
-        this.authority = authority
-    }
+    @Enumerated(EnumType.STRING)
+    open lateinit var role: Role
 }

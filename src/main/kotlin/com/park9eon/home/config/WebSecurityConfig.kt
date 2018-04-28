@@ -5,6 +5,7 @@ import com.park9eon.home.converter.NaverResultTokenProfileConverter
 import com.park9eon.home.converter.TokenProfileConverter
 import com.park9eon.home.filter.OAuth2ProfileAuthenticationProcessingFilter
 import com.park9eon.home.model.*
+import com.park9eon.home.model.auth.*
 import com.park9eon.home.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso

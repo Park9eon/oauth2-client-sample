@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.model.user
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
@@ -18,9 +18,9 @@ open class UserAddition {
     @JsonIgnore
     open lateinit var id: String
     @NotNull
-    @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JsonIgnore
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.EAGER)
     open lateinit var user: User
     @NotNull
     @JsonIgnore
@@ -28,7 +28,7 @@ open class UserAddition {
     @NotNull
     open var name: String? = null
     open var imageUrl: String? = null
-    @Column(columnDefinition = "TEXT")
     @JsonIgnore
+    @Column(columnDefinition = "TEXT")
     open var details: String? = null
 }

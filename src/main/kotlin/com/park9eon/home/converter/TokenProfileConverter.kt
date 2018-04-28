@@ -1,7 +1,7 @@
 package com.park9eon.home.converter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.park9eon.home.model.Profile
+import com.park9eon.home.model.auth.Profile
 
 /**
  * Initial version by: park9eon

@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.model.auth
 
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails
 

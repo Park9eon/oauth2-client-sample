@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.model.auth
 
 /**
  * Initial version by: park9eon

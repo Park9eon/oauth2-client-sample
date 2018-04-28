@@ -2,8 +2,8 @@ package com.park9eon.home.converter
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.park9eon.home.model.NaverProfile
-import com.park9eon.home.model.NaverProfileWrapper
+import com.park9eon.home.model.auth.NaverProfile
+import com.park9eon.home.model.auth.NaverProfileWrapper
 
 
 /**

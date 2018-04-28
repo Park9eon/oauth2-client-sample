@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.model.auth
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty

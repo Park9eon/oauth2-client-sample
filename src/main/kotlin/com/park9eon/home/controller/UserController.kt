@@ -1,9 +1,9 @@
 package com.park9eon.home.controller
 
+import com.park9eon.home.annotation.Me
+import com.park9eon.home.model.user.User
 import com.park9eon.home.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -22,10 +22,7 @@ class UserController {
     lateinit var userRepository: UserRepository
 
     @RequestMapping(method = [RequestMethod.GET])
-    fun index() = userRepository.findAll()
-
-    @RequestMapping("/me", method = [RequestMethod.GET])
-    fun me(@AuthenticationPrincipal user: Authentication?) = user
+    fun me(@Me user: User) = user
 
     @RequestMapping("/{username}", method = [RequestMethod.GET])
     fun show(@PathVariable username: String) = userRepository.findByUsername(username)

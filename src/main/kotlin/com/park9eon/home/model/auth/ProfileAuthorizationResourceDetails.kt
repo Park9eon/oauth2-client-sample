@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.model.auth
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties
 

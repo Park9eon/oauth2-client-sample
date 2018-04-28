@@ -1,6 +1,6 @@
 package com.park9eon.home.repository
 
-import com.park9eon.home.model.UserAddition
+import com.park9eon.home.model.user.UserAddition
 import org.springframework.data.jpa.repository.JpaRepository
 
 
