@@ -36,7 +36,7 @@ class UserDetails(
     override fun getCredentials() = null
 
     @JsonIgnore
-    override fun getPrincipal() = this
+    override fun getPrincipal() = this.getName()
 
     @JsonIgnore
     override fun getDetails() = null

@@ -9,10 +9,11 @@ import javax.validation.constraints.NotNull
  * Initial version created on: 05/04/2018
  */
 @Entity
-open class UserRole {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Long = 0
+open class UserRole(
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        open var id: Long = 0
+) {
     @NotNull
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)

@@ -40,7 +40,7 @@ open class MeArgumentResolver(
         }
         val meAnnotation = this.findMethodAnnotation<Me>(parameter)
         return if (user != null && meAnnotation?.load == true) {
-            userService.get(user.id)
+            userService.findById(user.id)
         } else {
             user
         }
