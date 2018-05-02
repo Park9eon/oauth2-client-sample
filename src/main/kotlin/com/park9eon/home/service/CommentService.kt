@@ -22,9 +22,9 @@ interface CommentService {
 
     fun update(comment: Comment, source: String): Comment
 
-    fun delete(id: Long): Boolean
+    fun delete(id: Long)
 
-    fun delete(comment: Comment): Boolean
+    fun delete(comment: Comment)
 
     fun connect(parentId: Long, childId: Long): Comment
 

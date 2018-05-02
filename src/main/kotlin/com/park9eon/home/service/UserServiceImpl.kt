@@ -9,6 +9,7 @@ import com.park9eon.home.model.user.UserAddition
 import com.park9eon.home.repository.UserAdditionRepository
 import com.park9eon.home.repository.UserRepository
 import com.park9eon.home.repository.UserRoleRepository
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -60,5 +61,11 @@ open class UserServiceImpl(
     @Transactional(readOnly = true)
     override fun findById(id: Long): User {
         return userRepository.get(id)
+    }
+
+    override fun currentUser(): User? {
+        return (SecurityContextHolder.getContext()?.authentication?.principal as? String)?.let {
+            this.userRepository.findByUsername(it)
+        }
     }
 }

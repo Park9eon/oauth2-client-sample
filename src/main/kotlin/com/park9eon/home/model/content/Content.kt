@@ -22,15 +22,18 @@ open class Content(
         open var id: Long = 0
 ) {
 
+    @CreatedBy
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.EAGER)
     open lateinit var user: User
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
-    open var comments: MutableSet<Comment>? = null
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    open lateinit var createdDate: Date
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    open var childs: MutableSet<Content>? = null
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    open lateinit var lastModifiedDate: Date
 
     @JoinColumn(name = "parent_id")
     @ManyToOne(fetch = FetchType.EAGER)
@@ -45,14 +48,15 @@ open class Content(
     @NotNull
     open var enable = true
 
-    @CreatedBy
-    open lateinit var createdBy: String
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
+    open var comments: MutableSet<Comment>? = null
 
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var createdDate: Date
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    open var childs: MutableSet<Content>? = null
 
-    @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var lastModifiedDate: Date
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
+    open var histories: MutableSet<Content>? = null
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
+    open var tags: MutableSet<ContentTag>? = null
 }

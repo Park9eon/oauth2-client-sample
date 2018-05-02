@@ -48,12 +48,12 @@ open class CommentServiceImpl(
                         this.source = source
                     })
 
-    override fun delete(id: Long): Boolean =
+    override fun delete(id: Long) =
             this.delete(Comment(id))
 
-    override fun delete(comment: Comment): Boolean {
+    override fun delete(comment: Comment) {
         comment.enable = false
-        return this.commentRepository.save()
+        this.commentRepository.save(comment)
     }
 
     override fun connect(parentId: Long, childId: Long): Comment {
