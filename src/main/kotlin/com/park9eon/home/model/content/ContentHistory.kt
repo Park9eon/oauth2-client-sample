@@ -20,8 +20,8 @@ open class ContentHistory(
         var id: Long = 0
 ) {
 
-    @JoinColumn(name = "content_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "content_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var content: Content
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -29,9 +29,9 @@ open class ContentHistory(
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var createdDate: Date
+    open var createdDate: Date? = null
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var lastModifiedDate: Date
+    open var lastModifiedDate: Date? = null
 }

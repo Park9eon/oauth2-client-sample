@@ -1,14 +1,12 @@
 package com.park9eon.home.model.content
 
 import com.park9eon.home.model.user.User
-import org.jetbrains.annotations.NotNull
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
-
 
 /**
  * Initial version by: park9eon
@@ -23,40 +21,41 @@ open class Content(
 ) {
 
     @CreatedBy
-    @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     open lateinit var user: User
 
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var createdDate: Date
+    @Column(columnDefinition = "TEXT", nullable = false)
+    open lateinit var source: String
 
-    @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var lastModifiedDate: Date
-
-    @JoinColumn(name = "parent_id")
-    @ManyToOne(fetch = FetchType.EAGER)
-    open var parent: Content? = null
-
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     open lateinit var type: ContentType
 
-    @Column(columnDefinition = "TEXT")
-    open lateinit var source: String
-
-    @NotNull
+    @Column(nullable = false)
     open var enable = true
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
     open var comments: MutableSet<Comment>? = null
 
+    @JoinColumn(name = "parent_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    open var parent: Content? = null
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     open var childs: MutableSet<Content>? = null
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
-    open var histories: MutableSet<Content>? = null
+    open var histories: MutableSet<ContentHistory>? = null
 
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
     open var tags: MutableSet<ContentTag>? = null
+
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    open var createdDate: Date? = null
+
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    open var lastModifiedDate: Date? = null
 }

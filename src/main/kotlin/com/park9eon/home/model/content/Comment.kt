@@ -1,7 +1,7 @@
 package com.park9eon.home.model.content
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.park9eon.home.model.user.User
-import org.jetbrains.annotations.NotNull
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -22,38 +22,47 @@ open class Comment(
 ) {
 
     @CreatedBy
-    @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     open lateinit var user: User
 
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var createdDate: Date
-
-    @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var lastModifiedDate: Date
-
-    @JoinColumn(name = "content_id")
+    @JsonIgnore
+    @JoinColumn(name = "content_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var content: Content
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    open var childs: MutableSet<Comment>? = null
-
-    @JoinColumn(name = "parent_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    open var parent: Comment? = null
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "comment")
-    open var histories: MutableSet<Comment>? = null
-
-    @Enumerated(EnumType.STRING)
-    open lateinit var type: CommentType
 
     @Column(columnDefinition = "TEXT", nullable = false)
     open lateinit var source: String
 
-    @NotNull
-    open var enable = true
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @JsonIgnore
+    open lateinit var type: CommentType
+
+    @JsonIgnore
+    @Column(nullable = false)
+    open var enabled = true
+
+    @JsonIgnore
+    @JoinColumn(name = "parent_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    open var parent: Comment? = null
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    open var childs: MutableSet<Comment>? = null
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "comment")
+    open var histories: MutableSet<Comment>? = null
+
+    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    open var createdDate: Date? = null
+
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    open var lastModifiedDate: Date? = null
+
+
 }

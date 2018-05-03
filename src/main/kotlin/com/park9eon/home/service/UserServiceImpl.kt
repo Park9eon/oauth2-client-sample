@@ -6,6 +6,7 @@ import com.park9eon.home.model.auth.Profile
 import com.park9eon.home.model.user.Role
 import com.park9eon.home.model.user.User
 import com.park9eon.home.model.user.UserAddition
+import com.park9eon.home.model.user.UserDetails
 import com.park9eon.home.repository.UserAdditionRepository
 import com.park9eon.home.repository.UserRepository
 import com.park9eon.home.repository.UserRoleRepository
@@ -29,43 +30,41 @@ open class UserServiceImpl(
     }
 
     @Transactional
-    override fun findOrCreateByProfile(profile: Profile): User {
-        val additionId = "${profile.serviceName}:${profile.id}"
-        val userAddition = try {
-            userAdditionRepository.get(additionId)
-        } catch (e: Exception) {
-            UserAddition()
-                    .apply {
-                        this.id = additionId
-                        this.serviceName = profile.serviceName
-                        this.user = userRepository.findByUsername(profile.email
-                                ?: additionId) ?: userRepository.create {
-                            username = profile.email ?: additionId
-                            enabled = true
-                            roles = mutableSetOf(userRoleRepository.create {
-                                this.user = user
-                                this.role = Role.ROLE_USER
-                            })
-                        }
+    override fun findOrCreateByProfile(profile: Profile): User =
+            "${profile.serviceName}:${profile.id}".let { additionId ->
+                val userAddition = try {
+                    userAdditionRepository.get(additionId)
+                } catch (e: Exception) {
+                    UserAddition()
+                            .apply {
+                                this.id = additionId
+                                this.serviceName = profile.serviceName
+                                this.user = userRepository.findByUsername(profile.email
+                                        ?: additionId) ?: userRepository.create {
+                                    username = profile.email ?: additionId
+                                    enabled = true
+                                    roles = mutableSetOf(userRoleRepository.create {
+                                        this.user = user
+                                        this.role = Role.ROLE_USER
+                                    })
+                                }
 
-                    }
-        }
-        return userAddition.run {
-            this.imageUrl = profile.imageUrl
-            this.name = profile.name ?: UNKNOWN_NAME
-            this.details = profile.details
-            userAdditionRepository.save(this).user
-        }
-    }
+                            }
+                }
+                userAddition.run {
+                    this.imageUrl = profile.imageUrl
+                    this.name = profile.name ?: UNKNOWN_NAME
+                    this.details = profile.details
+                    userAdditionRepository.save(this).user
+                }
+            }
 
     @Transactional(readOnly = true)
-    override fun findById(id: Long): User {
-        return userRepository.get(id)
-    }
+    override fun findById(id: Long): User =
+            userRepository.get(id)
 
-    override fun currentUser(): User? {
-        return (SecurityContextHolder.getContext()?.authentication?.principal as? String)?.let {
-            this.userRepository.findByUsername(it)
-        }
-    }
+    override fun currentUser(): User? =
+            (SecurityContextHolder.getContext()?.authentication as? UserDetails)?.id?.let {
+                User(it)
+            }
 }

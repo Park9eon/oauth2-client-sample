@@ -21,11 +21,11 @@ open class User(
         open var id: Long = 0
 ) {
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     open lateinit var username: String
 
     @JsonIgnore
-    @NotNull
+    @Column(nullable = false)
     open var enabled = true
 
     @JsonIgnore
@@ -38,9 +38,9 @@ open class User(
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var createdDate: Date
+    open var createdDate: Date? = null
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    open lateinit var modifiedDate: Date
+    open var modifiedDate: Date? = null
 }
