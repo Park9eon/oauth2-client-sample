@@ -1,15 +1,14 @@
 package com.park9eon.home.service
 
-import com.park9eon.home.extenstion.create
-import com.park9eon.home.extenstion.get
-import com.park9eon.home.model.auth.Profile
-import com.park9eon.home.model.user.Role
-import com.park9eon.home.model.user.User
-import com.park9eon.home.model.user.UserAddition
-import com.park9eon.home.model.user.UserDetails
-import com.park9eon.home.repository.UserAdditionRepository
-import com.park9eon.home.repository.UserRepository
-import com.park9eon.home.repository.UserRoleRepository
+import com.park9eon.home.dao.UserAdditionRepository
+import com.park9eon.home.dao.UserRepository
+import com.park9eon.home.dao.UserRoleRepository
+import com.park9eon.home.domain.User
+import com.park9eon.home.domain.UserAddition
+import com.park9eon.home.model.Profile
+import com.park9eon.home.model.Role
+import com.park9eon.home.model.UserDetails
+import com.park9eon.home.support.create
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -42,13 +41,11 @@ open class UserServiceImpl(
                                 this.user = userRepository.findByUsername(profile.email
                                         ?: additionId) ?: userRepository.create {
                                     username = profile.email ?: additionId
-                                    enabled = true
                                     roles = mutableSetOf(userRoleRepository.create {
                                         this.user = user
                                         this.role = Role.ROLE_USER
                                     })
                                 }
-
                             }
                 }
                 userAddition.run {

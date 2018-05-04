@@ -1,22 +1,26 @@
 package com.park9eon.home.service
 
-import com.park9eon.home.model.content.Comment
-import com.park9eon.home.model.content.CommentType
-import com.park9eon.home.model.content.Content
-import com.park9eon.home.model.user.User
+import com.park9eon.home.domain.Comment
+import com.park9eon.home.model.CommentType
+import com.park9eon.home.domain.Content
+import com.park9eon.home.domain.User
 import org.springframework.data.domain.Page
 
 interface CommentService {
 
-    fun findAll(page: Int, size: Int = 10): Page<Comment>
+    fun getAll(page: Int, size: Int = 10): Page<Comment>
 
-    fun findById(id: Long): Comment
+    fun get(id: Long): Comment
 
-    fun findBy(comment: Comment): Comment
+    fun get(comment: Comment): Comment
 
-    fun save(userId: Long, contentId: Long, source: String, type: CommentType = CommentType.TEXT): Comment
+    fun save(userId: Long, contentId: Long, source: String, type: CommentType): Comment
 
-    fun save(user: User, content: Content, source: String, type: CommentType = CommentType.TEXT): Comment
+    fun save(user: User, content: Content, source: String, type: CommentType): Comment
+
+    fun save(userId: Long, contentId: Long, parentId: Long, source: String, type: CommentType): Comment
+
+    fun save(user: User, content: Content, parent: Comment, source: String, type: CommentType): Comment
 
     fun update(id: Long, source: String): Comment
 
@@ -25,9 +29,5 @@ interface CommentService {
     fun delete(id: Long)
 
     fun delete(comment: Comment)
-
-    fun connect(parentId: Long, childId: Long): Comment
-
-    fun connect(parent: Comment, child: Comment): Comment
 
 }

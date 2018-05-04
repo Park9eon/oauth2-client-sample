@@ -1,7 +1,7 @@
 package com.park9eon.home.config
 
-import com.park9eon.home.model.user.User
-import com.park9eon.home.service.AuditorAwareImpl
+import com.park9eon.home.domain.User
+import com.park9eon.home.support.AuditorAwareImpl
 import com.park9eon.home.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean

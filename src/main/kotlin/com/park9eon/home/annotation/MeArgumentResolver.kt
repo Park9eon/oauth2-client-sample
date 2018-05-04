@@ -1,7 +1,7 @@
 package com.park9eon.home.annotation
 
-import com.park9eon.home.model.user.User
-import com.park9eon.home.model.user.UserDetails
+import com.park9eon.home.domain.User
+import com.park9eon.home.model.UserDetails
 import com.park9eon.home.service.UserService
 import org.springframework.core.MethodParameter
 import org.springframework.core.annotation.AnnotationUtils

@@ -1,13 +1,13 @@
 package com.park9eon.home.service
 
-import com.park9eon.home.extenstion.create
-import com.park9eon.home.extenstion.get
-import com.park9eon.home.extenstion.save
-import com.park9eon.home.model.content.Content
-import com.park9eon.home.model.content.ContentType
-import com.park9eon.home.model.user.User
-import com.park9eon.home.repository.ContentRepository
-import com.park9eon.home.repository.UserRepository
+import com.park9eon.home.dao.ContentHistoryRepository
+import com.park9eon.home.dao.ContentRepository
+import com.park9eon.home.dao.UserRepository
+import com.park9eon.home.domain.Content
+import com.park9eon.home.domain.User
+import com.park9eon.home.model.ContentType
+import com.park9eon.home.model.State
+import com.park9eon.home.support.create
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -16,18 +16,19 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 open class ContentServiceImpl(
         val userRepository: UserRepository,
-        val contentRepository: ContentRepository
+        val contentRepository: ContentRepository,
+        val contentHistoryRepository: ContentHistoryRepository
 ) : ContentService {
 
     @Transactional(readOnly = true)
-    override fun findAll(page: Int, size: Int) =
+    override fun getAll(page: Int, size: Int) =
             this.contentRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate")))
 
     @Transactional(readOnly = true)
-    override fun findById(id: Long) = this.contentRepository.get(id)
+    override fun get(id: Long) = this.contentRepository.get(id)
 
     @Transactional(readOnly = true)
-    override fun findBy(content: Content): Content =
+    override fun get(content: Content): Content =
             this.contentRepository.get(content.id)
 
     @Transactional
@@ -48,8 +49,13 @@ open class ContentServiceImpl(
 
     @Transactional
     override fun update(content: Content, source: String): Content =
-            this.contentRepository.save(content) {
-                this.source = source
+            this.contentHistoryRepository.create {
+                this.content = content
+                this.source = content.source
+            }.let {
+                this.contentRepository.save(content) {
+                    this.source = source
+                }
             }
 
     @Transactional
@@ -60,18 +66,8 @@ open class ContentServiceImpl(
     @Transactional
     override fun delete(content: Content) {
         contentRepository.save(content) {
-            enable = false
+            this.status = State.DELETED
         }
     }
-
-    @Transactional
-    override fun connect(parentId: Long, childId: Long): Content =
-            this.connect(contentRepository.get(parentId), contentRepository.get(parentId))
-
-    @Transactional
-    override fun connect(parent: Content, child: Content): Content =
-            this.contentRepository.save(child) {
-                this.parent = parent
-            }
 
 }
