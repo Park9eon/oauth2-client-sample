@@ -20,13 +20,16 @@ import javax.persistence.*
 open class Content(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        open var id: Long = 0
-) : RestrictedEntity {
+        override var id: Long = 0
+) : RestrictedEntity() {
 
     @CreatedBy
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     open lateinit var user: User
+
+    @Column(nullable = false)
+    open lateinit var title: String
 
     @Column(columnDefinition = "TEXT", nullable = false)
     open lateinit var source: String
@@ -39,7 +42,7 @@ open class Content(
     @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    override var status: State? = State.ENABLE
+    override var status: State = State.ENABLE
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")

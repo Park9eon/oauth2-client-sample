@@ -18,8 +18,8 @@ import javax.persistence.*
 open class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        open var id: Long = 0
-) : RestrictedEntity {
+        override var id: Long = 0
+) : RestrictedEntity() {
 
     @Column(unique = true, nullable = false)
     open lateinit var username: String
@@ -27,7 +27,7 @@ open class User(
     @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    override var status: State? = State.ENABLE
+    override var status: State = State.ENABLE
 
     @JsonIgnore
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "user")

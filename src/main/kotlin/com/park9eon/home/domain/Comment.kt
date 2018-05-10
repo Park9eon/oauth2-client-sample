@@ -20,8 +20,8 @@ import javax.persistence.*
 open class Comment(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        open var id: Long = 0
-) : RestrictedEntity {
+        override var id: Long = 0
+) : RestrictedEntity() {
 
     @CreatedBy
     @ManyToOne
@@ -44,7 +44,7 @@ open class Comment(
     @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    override var status: State? = State.ENABLE
+    override var status: State = State.ENABLE
 
     @JsonIgnore
     @JoinColumn(name = "parent_id")
@@ -57,7 +57,7 @@ open class Comment(
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "comment")
-    open var histories: MutableSet<Comment>? = null
+    open var histories: MutableSet<CommentHistory>? = null
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

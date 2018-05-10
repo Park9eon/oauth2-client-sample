@@ -8,6 +8,7 @@ import com.park9eon.home.domain.User
 import com.park9eon.home.model.ContentType
 import com.park9eon.home.model.State
 import com.park9eon.home.support.create
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -21,8 +22,8 @@ open class ContentServiceImpl(
 ) : ContentService {
 
     @Transactional(readOnly = true)
-    override fun getAll(page: Int, size: Int) =
-            this.contentRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate")))
+    override fun getAll(page: Int, size: Int): Page<Content> =
+            this.contentRepository.findAll(PageRequest.of(if (page > 0) page - 1 else 0, size, Sort.by("createdDate")))
 
     @Transactional(readOnly = true)
     override fun get(id: Long) = this.contentRepository.get(id)

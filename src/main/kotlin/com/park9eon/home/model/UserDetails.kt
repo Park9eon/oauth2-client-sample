@@ -17,7 +17,7 @@ class UserDetails(
         private var authorities: Collection<GrantedAuthority>? = null
 ) : Authentication {
 
-    constructor(user: User) : this(user.id, user.username, user.enabled, user.roles?.map { SimpleGrantedAuthority(it.role.name) })
+    constructor(user: User) : this(user.id, user.username, user.status == State.ENABLE, user.roles?.map { SimpleGrantedAuthority(it.role.name) })
 
     @JsonIgnore
     override fun getAuthorities() = this.authorities
