@@ -2,7 +2,6 @@ package com.park9eon.home.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.park9eon.home.model.CommentType
-import com.park9eon.home.model.RestrictedEntity
 import com.park9eon.home.model.State
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
@@ -20,8 +19,8 @@ import javax.persistence.*
 open class Comment(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        override var id: Long = 0
-) : RestrictedEntity() {
+        open var id: Long = 0
+) {
 
     @CreatedBy
     @ManyToOne
@@ -44,7 +43,7 @@ open class Comment(
     @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    override var status: State = State.ENABLE
+    open var status: State = State.ENABLED
 
     @JsonIgnore
     @JoinColumn(name = "parent_id")

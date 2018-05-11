@@ -1,6 +1,5 @@
 package com.park9eon.home.service
 
-import com.park9eon.home.dao.CommentHistoryRepository
 import com.park9eon.home.dao.CommentRepository
 import com.park9eon.home.dao.ContentRepository
 import com.park9eon.home.dao.UserRepository
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional
 open class CommentServiceImpl(
         val userRepository: UserRepository,
         val commentRepository: CommentRepository,
-        val commentHistoryRepository: CommentHistoryRepository,
         val contentRepository: ContentRepository
 ) : CommentService {
 
@@ -29,16 +27,16 @@ open class CommentServiceImpl(
             this.commentRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate")))
 
     @Transactional(readOnly = true)
-    override fun get(id: Long): Comment =
-            this.commentRepository.get(id)
+    override fun getOne(id: Long): Comment =
+            this.commentRepository.getOne(id)
 
     @Transactional(readOnly = true)
-    override fun get(comment: Comment): Comment =
-            this.commentRepository.get(comment.id)
+    override fun getOne(comment: Comment): Comment =
+            this.commentRepository.getOne(comment.id)
 
     @Transactional
     override fun save(userId: Long, contentId: Long, source: String, type: CommentType): Comment =
-            this.save(this.userRepository.get(userId), this.contentRepository.get(contentId), source, type)
+            this.save(this.userRepository.getOne(userId), this.contentRepository.getOne(contentId), source, type)
 
     @Transactional
     override fun save(user: User, content: Content, source: String, type: CommentType): Comment =
@@ -46,7 +44,7 @@ open class CommentServiceImpl(
 
     @Transactional
     override fun save(userId: Long, contentId: Long, parentId: Long, source: String, type: CommentType): Comment =
-            this.save(this.userRepository.get(userId), this.contentRepository.get(contentId), this.commentRepository.get(parentId), source, type)
+            this.save(this.userRepository.getOne(userId), this.contentRepository.getOne(contentId), this.commentRepository.getOne(parentId), source, type)
 
     @Transactional
     override fun save(user: User, content: Content, parent: Comment, source: String, type: CommentType): Comment =
@@ -63,23 +61,18 @@ open class CommentServiceImpl(
 
     @Transactional
     override fun update(id: Long, source: String): Comment =
-            this.update(this.commentRepository.get(id), source)
+            this.update(Comment(id), source)
 
     @Transactional
     override fun update(comment: Comment, source: String): Comment =
-            this.commentHistoryRepository.create {
-                this.comment = comment
-                this.source = comment.source
-            }.let {
-                this.commentRepository.save(comment. apply {
-                    this.source = source
-                })
-            }
-
+            this.commentRepository.save(this.commentRepository.getOne(comment.id)
+                    .apply {
+                        this.source = source
+                    })
 
     @Transactional
     override fun delete(id: Long) =
-            this.delete(this.commentRepository.get(id))
+            this.delete(this.commentRepository.getOne(id))
 
     @Transactional
     override fun delete(comment: Comment) {

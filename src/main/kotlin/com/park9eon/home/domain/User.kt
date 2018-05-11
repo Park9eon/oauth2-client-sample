@@ -1,7 +1,6 @@
 package com.park9eon.home.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.park9eon.home.model.RestrictedEntity
 import com.park9eon.home.model.State
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -18,8 +17,8 @@ import javax.persistence.*
 open class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        override var id: Long = 0
-) : RestrictedEntity() {
+        open var id: Long = 0
+) {
 
     @Column(unique = true, nullable = false)
     open lateinit var username: String
@@ -27,7 +26,7 @@ open class User(
     @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    override var status: State = State.ENABLE
+    open var status: State = State.ENABLED
 
     @JsonIgnore
     @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, mappedBy = "user")

@@ -6,5 +6,5 @@ import com.park9eon.home.domain.User
 interface UserService {
     fun findById(id: Long): User
     fun findOrCreateByProfile(profile: Profile): User
-    fun currentUser(): User?
+    fun currentUser(load: Boolean = false): User?
 }

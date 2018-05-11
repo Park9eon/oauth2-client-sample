@@ -10,9 +10,9 @@ interface CommentService {
 
     fun getAll(page: Int, size: Int = 10): Page<Comment>
 
-    fun get(id: Long): Comment
+    fun getOne(id: Long): Comment
 
-    fun get(comment: Comment): Comment
+    fun getOne(comment: Comment): Comment
 
     fun save(userId: Long, contentId: Long, source: String, type: CommentType): Comment
 

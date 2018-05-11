@@ -1,8 +1,8 @@
 package com.park9eon.home.controller
 
 import com.park9eon.home.annotation.Me
-import com.park9eon.home.domain.User
 import com.park9eon.home.dao.UserRepository
+import com.park9eon.home.domain.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/user")
 class UserController {
-
     @Autowired
     lateinit var userRepository: UserRepository
 

@@ -32,19 +32,23 @@ open class UserServiceImpl(
     override fun findOrCreateByProfile(profile: Profile): User =
             "${profile.serviceName}:${profile.id}".let { additionId ->
                 val userAddition = try {
-                    userAdditionRepository.get(additionId)
+                    userAdditionRepository.getOne(additionId)
                 } catch (e: Exception) {
                     UserAddition()
                             .apply {
                                 this.id = additionId
                                 this.serviceName = profile.serviceName
-                                this.user = userRepository.findByUsername(profile.email
-                                        ?: additionId) ?: userRepository.create {
-                                    username = profile.email ?: additionId
-                                    roles = mutableSetOf(userRoleRepository.create {
-                                        this.user = user
-                                        this.role = Role.ROLE_USER
-                                    })
+                                this.user = try {
+                                    userRepository.findByUsername(profile.email
+                                            ?: additionId)
+                                } catch (e: Exception) {
+                                    userRepository.create {
+                                        username = profile.email ?: additionId
+                                        roles = mutableSetOf(userRoleRepository.create {
+                                            this.user = user
+                                            this.role = Role.ROLE_USER
+                                        })
+                                    }
                                 }
                             }
                 }
@@ -58,10 +62,20 @@ open class UserServiceImpl(
 
     @Transactional(readOnly = true)
     override fun findById(id: Long): User =
-            userRepository.get(id)
+            userRepository.getOne(id)
 
-    override fun currentUser(): User? =
-            (SecurityContextHolder.getContext()?.authentication as? UserDetails)?.id?.let {
-                User(it)
-            }
+    override fun currentUser(load: Boolean): User? =
+            (SecurityContextHolder.getContext()
+                    ?.authentication as? UserDetails)
+                    ?.id
+                    ?.let {
+                        User(it)
+                    }
+                    ?.let {
+                        if (load) {
+                            this.findById(it.id)
+                        } else {
+                            it
+                        }
+                    }
 }

@@ -26,7 +26,7 @@ open class ContentTag(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", nullable = false)
-    lateinit var tag: Tag
+    open lateinit var tag: Tag
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
