@@ -17,10 +17,10 @@ interface CommentRepository : KpaRepository<Comment, Long> {
     override fun getOne(id: Long) = this.findByIdAndStatus(id)
 
     @JvmDefault
-    override fun findAll() =
-            this.findByStatus(State.ENABLED)
+    fun findAll(status: State = State.ENABLED) =
+            this.findByStatus(status)
 
     @JvmDefault
-    override fun findAll(pageable: Pageable) =
+    fun findAll(status: State = State.ENABLED, pageable: Pageable) =
             this.findByStatus(State.ENABLED, pageable)
 }

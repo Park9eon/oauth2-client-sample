@@ -24,15 +24,15 @@ open class CommentServiceImpl(
 
     @Transactional(readOnly = true)
     override fun getAll(page: Int, size: Int): Page<Comment> =
-            this.commentRepository.findAll(PageRequest.of(page, size, Sort.by("createdDate")))
+            this.commentRepository.findAll(State.ENABLED, PageRequest.of(page, size, Sort.by("createdDate")))
 
     @Transactional(readOnly = true)
     override fun getOne(id: Long): Comment =
-            this.commentRepository.getOne(id)
+            this.commentRepository.findByIdAndStatus(id, State.ENABLED)
 
     @Transactional(readOnly = true)
     override fun getOne(comment: Comment): Comment =
-            this.commentRepository.getOne(comment.id)
+            this.getOne(comment.id)
 
     @Transactional
     override fun save(userId: Long, contentId: Long, source: String, type: CommentType): Comment =

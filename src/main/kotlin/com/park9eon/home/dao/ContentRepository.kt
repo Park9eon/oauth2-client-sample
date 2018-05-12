@@ -14,12 +14,15 @@ interface ContentRepository : KpaRepository<Content, Long> {
 
     fun findByIdAndStatus(id: Long, status: State = State.ENABLED): Content
 
-    override fun findAll() =
-            this.findByStatus(State.ENABLED)
+    @JvmDefault
+    fun findAll(status: State = State.ENABLED) =
+            this.findByStatus(status)
 
-    override fun findAll(pageable: Pageable) =
+    @JvmDefault
+    fun findAll(status: State = State.ENABLED, pageable: Pageable) =
             this.findByStatus(State.ENABLED, pageable)
 
+    @JvmDefault
     override fun getOne(id: Long) =
             this.findByIdAndStatus(id)
 }

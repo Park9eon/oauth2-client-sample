@@ -41,7 +41,7 @@ open class Content(
     @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    open var status: State = State.ENABLED
+    open var status: State = State.DISABLED
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")

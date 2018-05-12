@@ -2,7 +2,6 @@ package com.park9eon.home.service
 
 import com.park9eon.home.dao.ContentHistoryRepository
 import com.park9eon.home.dao.ContentRepository
-import com.park9eon.home.dao.ContentTagRepository
 import com.park9eon.home.dao.UserRepository
 import com.park9eon.home.domain.Content
 import com.park9eon.home.domain.User
@@ -20,20 +19,19 @@ import org.springframework.transaction.annotation.Transactional
 open class ContentServiceImpl(
         val userRepository: UserRepository,
         val contentRepository: ContentRepository,
-        val contentHistoryRepository: ContentHistoryRepository,
-        val contentTagRepository: ContentTagRepository
+        val contentHistoryRepository: ContentHistoryRepository
 ) : ContentService {
 
     @Transactional(readOnly = true)
     override fun getAll(page: Int, size: Int): Page<Content> =
-            this.contentRepository.findAll(PageRequest.of(if (page > 0) page else 1, size, Sort.by("createdDate")))
+            this.contentRepository.findAll(State.ENABLED, PageRequest.of(if (page > 0) page else 1, size, Sort.by("createdDate")))
 
     @Transactional(readOnly = true)
-    override fun getOne(id: Long) = this.contentRepository.getOne(id)
+    override fun getOne(id: Long) = this.contentRepository.findByIdAndStatus(id, State.ENABLED)
 
     @Transactional(readOnly = true)
     override fun getOne(content: Content): Content =
-            this.contentRepository.getOne(content.id)
+            this.getOne(content.id)
 
     @Transactional
     override fun save(userId: Long, source: String, type: ContentType): Content =
