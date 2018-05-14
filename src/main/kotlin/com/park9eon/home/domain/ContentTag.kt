@@ -1,6 +1,5 @@
 package com.park9eon.home.domain
 
-import com.park9eon.home.model.Tag
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

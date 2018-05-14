@@ -23,8 +23,8 @@ open class CommentHistory(
     @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var comment: Comment
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    open lateinit var source: String
+    @Column(columnDefinition = "TEXT")
+    open var source: String? = null
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

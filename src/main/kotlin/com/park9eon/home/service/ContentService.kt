@@ -1,29 +1,29 @@
 package com.park9eon.home.service
 
+import com.park9eon.home.domain.Comment
 import com.park9eon.home.domain.Content
-import com.park9eon.home.model.ContentType
-import com.park9eon.home.domain.User
 import org.springframework.data.domain.Page
 
+/**
+ * 기본값은 모든 사용자가 볼 수 있는 내용들로 세부 조건들을 주었을때 자세한 정보를 볼 수 있다.
+ */
 interface ContentService {
 
-    fun getAll(page: Int, size: Int = 10): Page<Content>
+    fun getContents(userId: Long? = null, categoryId: Long? = null, offset: Int, size: Int = 10): Page<Content>
 
-    fun getOne(id: Long): Content
+    fun getContent(userId: Long? = null, contentId: Long): Content
 
-    fun getOne(content: Content): Content
+    fun saveContent(content: Content): Content
 
-    fun save(userId: Long, source: String, type: ContentType): Content
+    fun updateContent(content: Content): Content
 
-    fun save(user: User, source: String, type: ContentType): Content
+    fun deleteContent(contentId: Long, force: Boolean = false)
 
-    fun update(userId: Long, id: Long, source: String): Content
+    fun getComments(contentId: Long, offset: Int, size: Int = 10): Page<Comment>
 
-    fun update(user: User, content: Content, source: String): Content
+    fun saveComment(contentId: Long, comment: Comment): Comment
 
-    fun delete(userId: Long, id: Long)
+    fun updateComment(comment: Comment): Comment
 
-    fun delete(user: User, content: Content)
-
-    fun modifiable(user: User, content: Content): Boolean
+    fun deleteComment(commentId: Long, force: Boolean = false)
 }

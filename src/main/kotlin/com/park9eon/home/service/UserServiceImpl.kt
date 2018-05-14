@@ -56,7 +56,8 @@ open class UserServiceImpl(
                     this.imageUrl = profile.imageUrl
                     this.name = profile.name ?: UNKNOWN_NAME
                     this.details = profile.details
-                    userAdditionRepository.save(this).user
+                    userAdditionRepository.save(this)
+                            .user
                 }
             }
 

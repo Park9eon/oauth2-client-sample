@@ -1,34 +1,35 @@
 package com.park9eon.home.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
 
-
-/**
- * Initial version by: park9eon
- * Initial version created on: 30/04/2018
- */
-
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-open class ContentHistory(
+open class Category(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0
 ) {
 
-    @JoinColumn(name = "content_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    open lateinit var content: Content
-
     @Column(nullable = false)
-    open lateinit var title: String
+    open lateinit var name: String
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    open lateinit var source: String
+    @JsonIgnore
+    @JoinColumn(name = "parent_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    open var parent: Category? = null
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
+    open var childs: MutableSet<Category>? = null
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    open var contentCategories: MutableSet<Content>? = null
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

@@ -23,20 +23,25 @@ open class Content(
 ) {
 
     @CreatedBy
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     open lateinit var user: User
 
     @Column(nullable = false)
     open lateinit var title: String
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT")
     open lateinit var source: String
 
     @JsonIgnore
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     open lateinit var type: ContentType
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = false)
+    open var contentCategory: Category? = null
 
     @JsonIgnore
     @Column(nullable = false)
@@ -63,4 +68,5 @@ open class Content(
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     open var lastModifiedDate: Date? = null
+
 }

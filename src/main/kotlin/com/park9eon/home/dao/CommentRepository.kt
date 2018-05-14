@@ -7,20 +7,5 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface CommentRepository : KpaRepository<Comment, Long> {
-    fun findByStatus(status: State = State.ENABLED): List<Comment>
-
-    fun findByStatus(status: State = State.ENABLED, pageable: Pageable): Page<Comment>
-
-    fun findByIdAndStatus(id: Long, status: State = State.ENABLED): Comment
-
-    @JvmDefault
-    override fun getOne(id: Long) = this.findByIdAndStatus(id)
-
-    @JvmDefault
-    fun findAll(status: State = State.ENABLED) =
-            this.findByStatus(status)
-
-    @JvmDefault
-    fun findAll(status: State = State.ENABLED, pageable: Pageable) =
-            this.findByStatus(State.ENABLED, pageable)
+    fun findByContent_IdAndParentAndStatus(contentId: Long, parent: Comment?, status: State = State.ENABLED, pageable: Pageable): Page<Comment>
 }

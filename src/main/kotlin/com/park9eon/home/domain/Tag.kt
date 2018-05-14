@@ -1,4 +1,4 @@
-package com.park9eon.home.model
+package com.park9eon.home.domain
 
 import com.park9eon.home.domain.ContentTag
 import org.springframework.data.annotation.CreatedDate
@@ -10,6 +10,7 @@ import javax.persistence.*
 @Entity
 @EntityListeners(AuditingEntityListener::class)
 open class Tag {
+
     @Id
     open lateinit var name: String
 
