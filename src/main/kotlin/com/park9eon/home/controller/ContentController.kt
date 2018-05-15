@@ -1,7 +1,6 @@
 package com.park9eon.home.controller
 
 import com.park9eon.home.annotation.Me
-import com.park9eon.home.command.ContentCommand
 import com.park9eon.home.domain.Content
 import com.park9eon.home.domain.User
 import com.park9eon.home.service.ContentService
@@ -39,5 +38,13 @@ open class ContentController(
     fun delete(@Me me: User, @PathVariable(name = "id") id: Long) =
             this.contentService.deleteContent(me.id)
 
-    // @PutMapping("/{id}/tag/{tagName}")
+    @PutMapping("/{id}/tag/{tagName}")
+    @Secured("ROLE_USER")
+    fun addContentTag(@Me me: User, @PathVariable(name = "id") id: Long, @PathVariable(name = "tagName") tagName: String) =
+            this.contentService.addContentTag(id, tagName)
+
+    @DeleteMapping("/{id}/tag/{tagName}")
+    @Secured("ROLE_USER")
+    fun deleteContentTag(@Me me: User, @PathVariable(name = "id") id: Long, @PathVariable(name = "tagName") tagName: String) =
+            this.contentService.deleteContentTag(id, tagName)
 }

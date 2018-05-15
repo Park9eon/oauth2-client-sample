@@ -135,8 +135,8 @@ open class ContentServiceImpl(
     }
 
     @Transactional
-    override fun deleteContentTag(contentTagId: Long) {
-        this.contentTagRepository.deleteById(contentTagId)
+    override fun deleteContentTag(contentId: Long, tagName: String) {
+        this.contentTagRepository.deleteByContentAndTag_Name(Content(contentId), tagName)
     }
 
     @Transactional

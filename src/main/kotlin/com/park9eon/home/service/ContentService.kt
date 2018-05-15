@@ -28,7 +28,7 @@ interface ContentService {
 
     fun addContentTag(contentId: Long, tagName: String): ContentTag
 
-    fun deleteContentTag(contentTagId: Long)
+    fun deleteContentTag(contentId: Long, tagName: String)
 
     fun newCategory(name: String): Category
 

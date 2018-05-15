@@ -7,4 +7,5 @@ import com.park9eon.home.support.KpaRepository
 
 interface ContentTagRepository : KpaRepository<ContentTag, Long> {
     fun findByContentAndTag(content: Content, Tag: Tag): ContentTag?
+    fun deleteByContentAndTag_Name(content: Content, tagName: String)
 }
