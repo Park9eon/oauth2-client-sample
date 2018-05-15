@@ -1,7 +1,6 @@
 package com.park9eon.home.service
 
-import com.park9eon.home.domain.Comment
-import com.park9eon.home.domain.Content
+import com.park9eon.home.domain.*
 import org.springframework.data.domain.Page
 
 /**
@@ -11,7 +10,7 @@ interface ContentService {
 
     fun getContents(userId: Long? = null, categoryId: Long? = null, offset: Int, size: Int = 10): Page<Content>
 
-    fun getContent(userId: Long? = null, contentId: Long): Content
+    fun getContent(contentId: Long, userId: Long? = null): Content
 
     fun saveContent(content: Content): Content
 
@@ -26,4 +25,15 @@ interface ContentService {
     fun updateComment(comment: Comment): Comment
 
     fun deleteComment(commentId: Long, force: Boolean = false)
+
+    fun addContentTag(contentId: Long, tagName: String): ContentTag
+
+    fun deleteContentTag(contentTagId: Long)
+
+    fun newCategory(name: String): Category
+
+    fun updateCategory(category: Category): Category
+
+    fun deleteCategory(categoryId: Long)
+
 }

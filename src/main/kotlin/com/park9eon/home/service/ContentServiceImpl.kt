@@ -1,13 +1,7 @@
 package com.park9eon.home.service
 
-import com.park9eon.home.dao.CommentHistoryRepository
-import com.park9eon.home.dao.CommentRepository
-import com.park9eon.home.dao.ContentHistoryRepository
-import com.park9eon.home.dao.ContentRepository
-import com.park9eon.home.domain.Category
-import com.park9eon.home.domain.Comment
-import com.park9eon.home.domain.Content
-import com.park9eon.home.domain.User
+import com.park9eon.home.dao.*
+import com.park9eon.home.domain.*
 import com.park9eon.home.model.State
 import com.park9eon.home.support.create
 import org.springframework.data.domain.Page
@@ -21,7 +15,10 @@ open class ContentServiceImpl(
         val contentRepository: ContentRepository,
         val contentHistoryRepository: ContentHistoryRepository,
         val commentRepository: CommentRepository,
-        val commentHistoryRepository: CommentHistoryRepository
+        val commentHistoryRepository: CommentHistoryRepository,
+        val contentTagRepository: ContentTagRepository,
+        val categoryRepository: CategoryRepository,
+        val tagRepository: TagRepository
 ) : ContentService {
 
     @Transactional
@@ -40,7 +37,7 @@ open class ContentServiceImpl(
                     }
 
     @Transactional
-    override fun getContent(userId: Long?, contentId: Long): Content =
+    override fun getContent(contentId: Long, userId: Long?): Content =
             (if (userId == null) {
                 this.contentRepository.findByIdAndStatus(contentId, State.ENABLED)
             } else {
@@ -120,4 +117,43 @@ open class ContentServiceImpl(
                     }
                 } ?: throw Exception()
     }
+
+    @Transactional
+    override fun addContentTag(contentId: Long, tagName: String): ContentTag {
+        val content = Content(contentId)
+        val tag = try {
+            tagRepository.getOne(tagName)
+        } catch (e: Exception) {
+            Tag(tagName)
+        }
+        val contentTag = this.contentTagRepository.findByContentAndTag(content, tag)
+                ?: this.contentTagRepository.create {
+                    this.content = Content(contentId)
+                    this.tag = tag
+                }
+        return contentTag
+    }
+
+    @Transactional
+    override fun deleteContentTag(contentTagId: Long) {
+        this.contentTagRepository.deleteById(contentTagId)
+    }
+
+    @Transactional
+    override fun newCategory(name: String): Category {
+        return this.categoryRepository.create {
+            this.name = name
+        }
+    }
+
+    @Transactional
+    override fun updateCategory(category: Category): Category {
+        return this.categoryRepository.save(category)
+    }
+
+    @Transactional
+    override fun deleteCategory(categoryId: Long) {
+        this.categoryRepository.deleteById(categoryId)
+    }
+
 }

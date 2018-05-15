@@ -11,6 +11,12 @@ import javax.persistence.*
 @EntityListeners(AuditingEntityListener::class)
 open class Tag {
 
+    constructor()
+
+    constructor(name: String) : this() {
+        this.name = name
+    }
+
     @Id
     open lateinit var name: String
 

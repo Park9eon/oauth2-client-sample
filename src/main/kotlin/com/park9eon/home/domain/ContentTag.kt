@@ -6,7 +6,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.util.*
 import javax.persistence.*
 
-
 /**
  * Initial version by: park9eon
  * Initial version created on: 30/04/2018
@@ -24,7 +23,7 @@ open class ContentTag(
     open lateinit var content: Content
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id", nullable = false)
+    @JoinColumn(name = "tag_id", nullable = false, updatable = false)
     open lateinit var tag: Tag
 
     @CreatedDate
