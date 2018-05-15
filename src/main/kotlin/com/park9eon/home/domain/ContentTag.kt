@@ -20,7 +20,7 @@ open class ContentTag(
 ) {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "content_id", nullable = false)
+    @JoinColumn(name = "content_id", nullable = false, updatable = false)
     open lateinit var content: Content
 
     @ManyToOne(fetch = FetchType.LAZY)

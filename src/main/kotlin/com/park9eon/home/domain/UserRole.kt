@@ -16,10 +16,11 @@ open class UserRole(
         open var id: Long = 0
 ) {
     @NotNull
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var user: User
-    @NotNull
+
+    @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     open lateinit var role: Role
 }

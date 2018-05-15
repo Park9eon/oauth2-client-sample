@@ -27,7 +27,6 @@ open class Comment(
     @JoinColumn(name = "user_id")
     open var user: User? = null
 
-    @JsonIgnore
     @JoinColumn(name = "content_id", updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var content: Content
@@ -35,26 +34,21 @@ open class Comment(
     @Column(columnDefinition = "TEXT")
     open var source: String? = null
 
-    @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     open lateinit var type: CommentType
 
-    @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     open var status: State = State.ENABLED
 
-    @JsonIgnore
     @JoinColumn(name = "parent_id")
     @ManyToOne(fetch = FetchType.LAZY)
     open var parent: Comment? = null
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     open var childs: MutableSet<Comment>? = null
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "comment")
     open var histories: MutableSet<CommentHistory>? = null
 
@@ -62,7 +56,6 @@ open class Comment(
     @Temporal(TemporalType.TIMESTAMP)
     open var createdDate: Date? = null
 
-    @JsonIgnore
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     open var lastModifiedDate: Date? = null

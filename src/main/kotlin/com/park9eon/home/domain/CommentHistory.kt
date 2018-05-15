@@ -19,11 +19,11 @@ open class CommentHistory(
         var id: Long = 0
 ) {
 
-    @JoinColumn(name = "comment_id", nullable = false)
+    @JoinColumn(name = "comment_id", nullable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var comment: Comment
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", updatable = false)
     open var source: String? = null
 
     @CreatedDate

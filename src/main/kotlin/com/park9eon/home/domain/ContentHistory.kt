@@ -20,14 +20,14 @@ open class ContentHistory(
         var id: Long = 0
 ) {
 
-    @JoinColumn(name = "content_id", nullable = false)
+    @JoinColumn(name = "content_id", nullable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     open lateinit var content: Content
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     open lateinit var title: String
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false, updatable = false)
     open lateinit var source: String
 
     @CreatedDate

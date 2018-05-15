@@ -1,6 +1,5 @@
 package com.park9eon.home.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.park9eon.home.model.ContentType
 import com.park9eon.home.model.State
 import org.springframework.data.annotation.CreatedBy
@@ -19,6 +18,7 @@ import javax.persistence.*
 open class Content(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(updatable = false, nullable = false)
         open var id: Long = 0
 ) {
 
@@ -33,30 +33,24 @@ open class Content(
     @Column(columnDefinition = "TEXT")
     open lateinit var source: String
 
-    @JsonIgnore
     @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     open lateinit var type: ContentType
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", nullable = false)
     open var contentCategory: Category? = null
 
-    @JsonIgnore
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     open var status: State = State.DISABLED
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
     open var comments: MutableSet<Comment>? = null
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
     open var histories: MutableSet<ContentHistory>? = null
 
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "content")
     open var tags: MutableSet<ContentTag>? = null
 
@@ -64,7 +58,6 @@ open class Content(
     @Temporal(TemporalType.TIMESTAMP)
     open var createdDate: Date? = null
 
-    @JsonIgnore
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     open var lastModifiedDate: Date? = null

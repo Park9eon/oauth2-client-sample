@@ -20,24 +20,19 @@ import javax.validation.constraints.NotNull
 open class UserAddition {
     // 'source-id' 형식
     @Id
-    @JsonIgnore
     open lateinit var id: String
 
-    @NotNull
-    @JsonIgnore
-    @JoinColumn(name = "user_id")
+    @JoinColumn(nullable = false, name = "user_id", updatable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     open lateinit var user: User
 
-    @NotNull
-    @JsonIgnore
+    @Column(nullable = false)
     open lateinit var serviceName: String
 
-    @NotNull
     open var name: String? = null
+
     open var imageUrl: String? = null
 
-    @JsonIgnore
     @Column(columnDefinition = "TEXT")
     open var details: String? = null
 

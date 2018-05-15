@@ -19,15 +19,6 @@ open class Category(
     open lateinit var name: String
 
     @JsonIgnore
-    @JoinColumn(name = "parent_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    open var parent: Category? = null
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
-    open var childs: MutableSet<Category>? = null
-
-    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     open var contentCategories: MutableSet<Content>? = null
 
