@@ -38,7 +38,7 @@ open class Content(
     open lateinit var type: ContentType
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     open var contentCategory: Category? = null
 
     @Column(nullable = false)
