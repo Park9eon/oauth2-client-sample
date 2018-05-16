@@ -7,5 +7,5 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface CommentRepository : KpaRepository<Comment, Long> {
-    fun findByContent_IdAndParentAndStatus(contentId: Long, parent: Comment?, status: State = State.ENABLED, pageable: Pageable): Page<Comment>
+    fun findByContent_IdAndParent_IdAndStatus(contentId: Long, parentId: Long?, status: State = State.ENABLED, pageable: Pageable): Page<Comment>
 }

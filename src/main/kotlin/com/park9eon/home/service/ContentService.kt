@@ -15,7 +15,7 @@ interface ContentService {
 
     fun deleteContent(contentId: Long, force: Boolean = false)
 
-    fun getComments(contentId: Long, offset: Int, size: Int = 10): Page<Comment>
+    fun getComments(contentId: Long, parentId: Long? = null, offset: Int, size: Int = 10): Page<Comment>
 
     fun saveComment(contentId: Long, comment: Comment): Comment
 

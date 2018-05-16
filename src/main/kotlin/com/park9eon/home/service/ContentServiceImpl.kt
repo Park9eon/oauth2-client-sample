@@ -81,8 +81,8 @@ open class ContentServiceImpl(
     }
 
     @Transactional
-    override fun getComments(contentId: Long, offset: Int, size: Int): Page<Comment> =
-            this.commentRepository.findByContent_IdAndParentAndStatus(contentId, null, State.ENABLED, PageRequest.of(offset, size))
+    override fun getComments(contentId: Long, parentId: Long?, offset: Int, size: Int): Page<Comment> =
+            this.commentRepository.findByContent_IdAndParent_IdAndStatus(contentId, parentId, State.ENABLED, PageRequest.of(offset, size))
 
     @Transactional
     override fun saveComment(contentId: Long, comment: Comment): Comment =
