@@ -22,10 +22,12 @@ open class Category(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     open var contentCategories: MutableSet<Content>? = null
 
+    @JsonIgnore
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     open var createdDate: Date? = null
 
+    @JsonIgnore
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     open var lastModifiedDate: Date? = null

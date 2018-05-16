@@ -18,6 +18,7 @@ open class Tag {
     }
 
     @Id
+    @Column(nullable = false, unique = true, updatable = false)
     open lateinit var name: String
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tag")
